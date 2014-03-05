@@ -6,9 +6,44 @@ title: Project Configuration
 Project Configuration
 ================================================================================
 
-What?
+This post will talk about how to configure code. Just about any code that is
+deployed needs to be configured. There are many different forms this
+configuration can take, I will attempt to cover the best options and ideas
+regarding configuration.
+
+Where to Store Configuration Data
 --------------------------------------------------------------------------------
-How to configure code in dev, qa, and prod environments.
+
+### Nowhere
+
+You can roll with no configuration. Just hard-code values in your source. Write
+logic that chooses the correct value at runtime. Not recommended.
+
+### Code Repository
+
+Store configuration files in your code repository. You get all the benefits of
+a source control system, and your configuration is easy to find, examine, and
+change. When I do this, I usually make `/config/{qa,prod}` directories to hold my
+configuration files.
+
+### Deployment Hosts
+
+This is a great option if you have host-specific configuration e.g. your path
+to ImageMagick's `convert` is different on different hosts. The drawback here is
+that your configuration is now spread out over multiple hosts and is, therefore,
+harder to maintain.
+
+### Database
+
+### OS
+
+When to Apply Configuration
+--------------------------------------------------------------------------------
+
+### Build Time
+
+### Runtime
+
 
 Responsibilities of configuration:
 --------------------------------------------------------------------------------
