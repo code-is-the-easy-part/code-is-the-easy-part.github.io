@@ -1,41 +1,50 @@
 ---
 layout: post
-title: Project Configuration
+title: Configuration
 ---
 
-Project Configuration
-================================================================================
-
 This post will talk about how to configure code. Just about any code that is
-deployed needs to be configured. There are many different forms this
-configuration can take, I will attempt to cover the best options and ideas
-regarding configuration.
+deployed or shared needs to be configured. There are many different forms this
+configuration can take, I will attempt to cover the best practices for
+configuration.
 
-Where to Store Configuration Data
+First Things
 --------------------------------------------------------------------------------
+There are two main considerations when thinking about configuration:
 
-### Nowhere
+1. Where to store it
+1. What format
 
-You can roll with no configuration. Just hard-code values in your source. Write
-logic that chooses the correct value at runtime. Not recommended.
+### Where to Store Configuration Data
 
-### Code Repository
+#### Code Repository
 
 Store configuration files in your code repository. You get all the benefits of
-a source control system, and your configuration is easy to find, examine, and
+source control, and your configuration is easy to find, examine, and
 change. When I do this, I usually make `/config/{qa,prod}` directories to hold my
 configuration files.
 
-### Deployment Hosts
+The main drawback with this approach is that updating configuration values requires a full deployment. This can be mitigated by
 
-This is a great option if you have host-specific configuration e.g. your path
+* creating a patch deploy process that only deploys configuration
+* using a hybrid approach that also takes advantage of host-based configuration (described below)
+
+Finally, if your configuration varies per deployment/installation this can be difficult as you will have to have a separate file for each deployment.
+
+#### Deployment Hosts
+
+The common approach here is to have a configuration file or directory that is searched at startup time e.g. `/etc/$APP_NAME` or `/opt/$APP_NAME/etc`. 
+
+This is a great option if you have host/deployment-specific configuration e.g. your path
 to ImageMagick's `convert` is different on different hosts. The drawback here is
 that your configuration is now spread out over multiple hosts and is, therefore,
 harder to maintain.
 
-### Database
+Managing these configuration files can be more difficult, as they are managed by hand, or by dev-ops. 
 
-### OS
+#### Database
+
+Using a database for configuration (e.g. an `app_config` table with name/value pairs) is a great way to share configuration across all instances of the app. 
 
 When to Apply Configuration
 --------------------------------------------------------------------------------
@@ -124,21 +133,21 @@ email = info@${domain}
 At runtime, email would be expanded to `info@example.com`.
 
 Configuration should live in four different places:
-1 Version controlled source in the codebase. E.g. `.properties` files
+1. Version controlled source in the codebase. E.g. `.properties` files
 
-I typically put these files in a `/src/main/resources` directory whos contents end up in the root of the constructed jar. Any configuration in these files should be suitable for development. E.g. database URLs should point to localhost, S3 buckets should be named in such a way to know that they're for development (and they should probably not conflict with other developers' buckets), etc..
+   I typically put these files in a `/src/main/resources` directory whos contents end up in the root of the constructed jar. Any configuration in these files should be suitable for development. E.g. database URLs should point to localhost, S3 buckets should be named in such a way to know that they're for development (and they should probably not conflict with other developers' buckets), etc..
 
-1 Environment-specific version controlled source. E.g. overrides for test, qa, and prod environments
+1. Environment-specific version controlled source. E.g. overrides for test, qa, and prod environments
 
-These files live in directories like `/config/qa/etc`, `/config/prod/etc`, etc.. These files are deployed, depending on on the environment being deployed to (i.e. files under `/config/prod` are deployed when deploying to production). Some common fields that are overridden here are API tokens, database URLs, S3 buckets, email addresses, timeout values, and caching policies.
+   These files live in directories like `/config/qa/etc`, `/config/prod/etc`, etc.. These files are deployed, depending on on the environment being deployed to (i.e. files under `/config/prod` are deployed when deploying to production). Some common fields that are overridden here are API tokens, database URLs, S3 buckets, email addresses, timeout values, and caching policies.
 
-1 Local non-version controlled override files. These files will exist on development laptops and desktops, and qa/test/prod servers.
+1. Local non-version controlled override files. These files will exist on development laptops and desktops, and qa/test/prod servers.
 
-This is usually reserved for host-specific configuration and quick-fix updates.
+   This is usually reserved for host-specific configuration and quick-fix updates.
 
-1 Command line options. E.g. `-Dxxx.home=/opt/xxx`
+1. Command line options. E.g. `-Dxxx.home=/opt/xxx`
 
-One should always be able to override any configuration parameter via the command line at JVM start time.
+   One should always be able to override any configuration parameter via the command line at JVM start time.
 
 TODO:
 How to share config between shell and runtime.
