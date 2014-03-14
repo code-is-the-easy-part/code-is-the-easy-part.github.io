@@ -44,12 +44,27 @@ Managing these configuration files can be difficult, as they will need to be mai
 
 Using a database for configuration is a great way to share configuration across all instances of the app. This is similar to the Code Repository option in that configuration is easily maintained across all deployments. However, deployment-specific configuration is difficult, and then there's the chicken/egg problem of how does the app know what database to connect to? (If configuration data is stored in a database, the app must connect to the database, but how can the app know what database to connect to without configuration.)
 
+The big advantages with database configuration are
+
+* configuration can vary independent of the software deployment
+* configuration can be maintained from a central location
+
 When to Apply Configuration
 --------------------------------------------------------------------------------
 
 ### Build Time
 
 ### Runtime
+
+
+Code in Configuration
+--------------------------------------------------------------------------------
+
+Storing code in configuration can give you programs a new level of power and flexibility. Of course, this comes at a cost. It's hard to verify the correctness of code in configuration, and an infrastructure must be built around the execution of this code. 
+
+Example of storing code in configuration are email templates and event hooks. Email templates could be stored as configuration and allow for "easy" updates independent of deployments. Event hooks could allow for "easy" system updates that quickly address changing requirements. Code in configuration is also a solution to handling changing or unknown inputs into your program. E.g. if you're receiving data from a third party that is not well defined (the data, that is), you may want to store the code that processes the data in configuration so it can be updated without a new deployment.
+
+You may notice, I put "easy" in quotes above. This is because, this kind of configuration is never easy and should be considered carefully before employing.
 
 
 Responsibilities of configuration:
