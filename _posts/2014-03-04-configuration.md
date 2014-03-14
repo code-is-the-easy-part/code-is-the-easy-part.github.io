@@ -3,17 +3,15 @@ layout: post
 title: Configuration
 ---
 
-This post will talk about how to configure code. Just about any code that is
-deployed or shared needs to be configured. There are many different forms this
-configuration can take, I will attempt to cover the best practices for
-configuration.
+Just about any code that is deployed or shared needs to be configured. This post
+will discuss configuration best practices.
 
 First Things
 --------------------------------------------------------------------------------
 There are two main considerations when thinking about configuration:
 
-1. Where to store it
-1. What format
+* Where to store it
+* What format
 
 ### Where to Store Configuration Data
 
@@ -24,27 +22,27 @@ source control, and your configuration is easy to find, examine, and
 change. When I do this, I usually make `/config/{qa,prod}` directories to hold my
 configuration files.
 
-The main drawback with this approach is that updating configuration values requires a full deployment. This can be mitigated by
+The main drawback with this approach is that updating configuration values will require a full deployment. This can be mitigated by
 
 * creating a patch deploy process that only deploys configuration
 * using a hybrid approach that also takes advantage of host-based configuration (described below)
 
-Finally, if your configuration varies per deployment/installation this can be difficult as you will have to have a separate file for each deployment.
+Finally, if your configuration varies per deployment/installation this can be difficult as you will have to have a separate file in source control for each deployment (not to mention how to determine which configuration file to use during deployment).
 
 #### Deployment Hosts
 
 The common approach here is to have a configuration file or directory that is searched at startup time e.g. `/etc/$APP_NAME` or `/opt/$APP_NAME/etc`. 
 
 This is a great option if you have host/deployment-specific configuration e.g. your path
-to ImageMagick's `convert` is different on different hosts. The drawback here is
+to ImageMagick's `convert` varies on a per-host basis. The drawback here is
 that your configuration is now spread out over multiple hosts and is, therefore,
 harder to maintain.
 
-Managing these configuration files can be more difficult, as they are managed by hand, or by dev-ops. 
+Managing these configuration files can be difficult, as they will need to be maintained by some dev-ops process. 
 
 #### Database
 
-Using a database for configuration (e.g. an `app_config` table with name/value pairs) is a great way to share configuration across all instances of the app. 
+Using a database for configuration is a great way to share configuration across all instances of the app. This is similar to the Code Repository option in that configuration is easily maintained across all deployments. However, deployment-specific configuration is difficult, and then there's the chicken/egg problem of how does the app know what database to connect to? (If configuration data is stored in a database, the app must connect to the database, but how can the app know what database to connect to without configuration.)
 
 When to Apply Configuration
 --------------------------------------------------------------------------------
