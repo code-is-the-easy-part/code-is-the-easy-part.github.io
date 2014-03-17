@@ -6,6 +6,27 @@ title: Configuration
 Just about any code that is deployed or shared needs to be configured. This post
 will discuss configuration best practices.
 
+Most (all?) programs of any consequence will require configuration. Configuration can tell your program
+
+* Where to find your database
+* What port to bind to
+* How long to wait until timing out
+* Who to email when there's a problem
+* What remote API server to connect to
+* What domain name the web server is using
+* Much more...
+
+Configuration in Development
+--------------------------------------------------------------------------------
+
+Your codebase should come with sensible defaults. An engineer should be able to pull down the code, build it, and run it quickly with little to no configuration. In other words, the default configuration should always be set for a developer's environment. I recommend this for a few reasons
+
+   * Your deployment process should take care of configuring your program in remote environments. In a developer's environment, there is no deployment (usually), and therefore, no chance to set configuration
+   * Money. Engineering talent is expensive and we don't want to waste time with needless configuration
+   * It would not be good for a program running in a dev environment program interfere with production data (e.g. a dev program connecting to a production database)
+
+Engineers will need the ability to modify configuration in their development environments. The approach to modifying configuration in development will be the same for all other environments. These approaches will be discussed later.
+
 First Things
 --------------------------------------------------------------------------------
 There are two main considerations when thinking about configuration:
@@ -54,7 +75,11 @@ When to Apply Configuration
 
 ### Build Time
 
+In the technique, build artifacts are built with the configuration specified at build time. The main advantage with built time configuration is that the build artifacts can stand on their own i.e. they do not require any specific environment to be deployed into. The disadvantage is that any configuration change requires a new build and deployment.
+
 ### Runtime
+
+### Hybrid (Build Time/Runtime)
 
 
 Code in Configuration
@@ -64,7 +89,7 @@ Storing code in configuration can give you programs a new level of power and fle
 
 Example of storing code in configuration are email templates and event hooks. Email templates could be stored as configuration and allow for "easy" updates independent of deployments. Event hooks could allow for "easy" system updates that quickly address changing requirements. Code in configuration is also a solution to handling changing or unknown inputs into your program. E.g. if you're receiving data from a third party that is not well defined (the data, that is), you may want to store the code that processes the data in configuration so it can be updated without a new deployment.
 
-You may notice, I put "easy" in quotes above. This is because, this kind of configuration is never easy and should be considered carefully before employing.
+You may notice, I put "easy" in quotes above. This is because, this kind of configuration is never easy and should be considered carefully before employing. I would advise against allowing anybody who is not a professional programmer write code in production systems. This includes any kind of template languages and markup.
 
 
 Responsibilities of configuration:
@@ -80,15 +105,6 @@ prod - End-user facing.
 
 Why?
 --------------------------------------------------------------------------------
-Every developer needs to think about configuration. Configuration is one of the first things I address when building a new codebase. Configuration can tell your program
-* Where to find your database
-* What port to bind to
-* How long to wait until timing out
-* Who to email when there's a problem
-* What remote API server to connect to
-* What domain name the web server is using
-* So much more...
-
 You can run multiple instances of your program on a single host.
 
 A good codebase will have solutions for all kinds of configuration needs. Some things to consider:
