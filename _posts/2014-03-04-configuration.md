@@ -16,6 +16,13 @@ Most (all?) programs of any consequence will require configuration. Configuratio
 * What domain name the web server is using
 * Much more...
 
+Early and Often
+--------------------------------------------------------------------------------
+
+In just about any project, configuration should be one of the first things you address. Inevitably, there will be values that need to be configured, even to share your code with other developers. If you don't address this early, you will attempt to solve problems with methods other than configuration that lead to sub-optimal functionality.
+
+A classic example of this would be to leave configuration in the code (e.g. hardcode a database connection string). When this code is shared and the connection string must be modified to work in a new environment, there is a chance that the connection string change will be committed, and will break other's development. This database connection string is the first of many values that should be configured. If you wait to employ configuration, you will cost you and your team valuable time.
+
 Configuration in Development
 --------------------------------------------------------------------------------
 
